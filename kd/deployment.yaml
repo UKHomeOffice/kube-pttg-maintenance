@@ -1,0 +1,95 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: pttg-maintenance
+  labels:
+    version: {{.VERSION}}
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      name: pttg-maintenance
+  strategy:
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 2
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        name: pttg-maintenance
+        version: {{.VERSION}}
+    spec:
+      imagePullSecrets:
+      - name: registrykey
+      containers:
+      - name: proxy
+        image: quay.io/ukhomeofficedigital/nginx-proxy:v1.5.1
+        imagePullPolicy: Always
+        resources:
+         limits:
+          memory: "100Mi"
+          cpu: 100m
+         requests:
+          memory: "50Mi"
+          cpu: 100m
+        env:
+          - name: PROXY_SERVICE_HOST
+            value: '127.0.0.1'
+          - name: PROXY_SERVICE_PORT
+            value: '8080'
+          - name: NAXSI_USE_DEFAULT_RULES
+            value: 'FALSE'
+          - name: ENABLE_UUID_PARAM
+            value: 'FALSE'
+          - name: HTTPS_REDIRECT
+            value: 'FALSE'
+          - name: SERVER_CERT
+            value: /etc/nginx/secrets/pttg-maintenance-bundle.pem
+          - name: SERVER_KEY
+            value: /etc/nginx/secrets/pttg-maintenance-key.pem
+        volumeMounts:
+          - name: secrets
+            mountPath: /etc/nginx/secrets
+            readOnly: true
+          - name: html
+            mountPath: /html
+            readOnly: true
+        ports:
+          - name: https
+            containerPort: 443
+      - name: pttg-ip-hmrc
+        image: quay.io/ukhomeofficedigital/pttg-maintenance:{{.VERSION}}
+        resources:
+          limits:
+            cpu: 300m
+            memory: 1024Mi
+          requests:
+            cpu: 200m
+            memory: 512Mi
+        ports:
+          - name: http
+            containerPort: 8080
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: http
+            httpHeaders:
+              - name: X-probe
+                value: kubelet
+          initialDelaySeconds: 240
+          periodSeconds: 20
+          timeoutSeconds: 10
+        imagePullPolicy: Always
+        volumeMounts:
+          - name: html
+            mountPath: /html
+            readOnly: false
+      volumes:
+      - name: secrets
+        emptyDir:
+          medium: "Memory"
+      - name: html
+        emptyDir:
+          medium: "Memory"
