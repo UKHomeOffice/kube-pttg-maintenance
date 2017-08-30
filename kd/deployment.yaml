@@ -59,7 +59,7 @@ spec:
         ports:
           - name: https
             containerPort: 443
-      - name: pttg-ip-hmrc
+      - name: pttg-maintenance
         image: quay.io/ukhomeofficedigital/pttg-maintenance:{{.VERSION}}
         resources:
           limits:
