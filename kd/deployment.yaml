@@ -82,8 +82,8 @@ spec:
           - name: secrets
             mountPath: /etc/nginx/secrets
             readOnly: true
-          - name: html
-            mountPath: /html
+          - name: htmlstatic
+            mountPath: /htmlstatic
             readOnly: true
         ports:
           - name: https
@@ -102,13 +102,13 @@ spec:
             containerPort: 8080
         imagePullPolicy: Always
         volumeMounts:
-          - name: html
-            mountPath: /html
+          - name: htmlstatic
+            mountPath: /htmlstatic
             readOnly: false
       volumes:
       - name: secrets
         emptyDir:
           medium: "Memory"
-      - name: html
+      - name: htmlstatic
         emptyDir:
           medium: "Memory"
