@@ -74,8 +74,8 @@ spec:
             value: /etc/nginx/secrets/pttg-maintenance-bundle.pem
           - name: SERVER_KEY
             value: /etc/nginx/secrets/pttg-maintenance-key.pem
-          - name: LOCATIONS_CSV
-            value: /htmlstatic
+          - name: ADD_NGINX_SERVER_CFG
+            value: "location /htmlstatic {alias /htmlstatic;}"
         volumeMounts:
           - name: secrets
             mountPath: /etc/nginx/secrets
