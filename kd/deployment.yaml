@@ -80,7 +80,8 @@ spec:
             value: /etc/nginx/secrets/pttg-maintenance-key.pem
           - name: ADD_NGINX_SERVER_CFG
             #value: "location /htmlstatic {alias /htmlstatic;}"
-            value: "location / {rewrite ^ /htmlstatic/index.html break;}"
+            #value: "location / {rewrite ^ /htmlstatic/index.html break;}"
+            value: "error_page 404 =200 /htmlstatic/index.html;"
         volumeMounts:
           - name: secrets
             mountPath: /etc/nginx/secrets
