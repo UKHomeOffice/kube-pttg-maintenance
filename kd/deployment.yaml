@@ -78,8 +78,8 @@ spec:
             value: /etc/nginx/secrets/pttg-maintenance-bundle.pem
           - name: SERVER_KEY
             value: /etc/nginx/secrets/pttg-maintenance-key.pem
-          - name: LOCATION_CSV
-            value: "/notfound"
+          - name: LOCATIONS_CSV
+            value: "/wontbefound"
           - name: ADD_NGINX_SERVER_CFG
             #value: "location /htmlstatic {alias /htmlstatic;}"
             #value: "location / {rewrite ^ /htmlstatic/index.html break;}"
