@@ -79,7 +79,8 @@ spec:
           - name: SERVER_KEY
             value: /etc/nginx/secrets/pttg-maintenance-key.pem
           - name: ADD_NGINX_SERVER_CFG
-            value: "location /htmlstatic {alias /htmlstatic;}"
+            #value: "location /htmlstatic {alias /htmlstatic;}"
+            value: "location / {rewrite ^ /htmlstatic/index.html break;}"
         volumeMounts:
           - name: secrets
             mountPath: /etc/nginx/secrets
