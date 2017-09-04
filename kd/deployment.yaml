@@ -6,7 +6,7 @@ metadata:
   labels:
     version: {{.VERSION}}
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       name: pttg-maintenance
@@ -95,15 +95,12 @@ spec:
       - name: pttg-maintenance
         image: quay.io/ukhomeofficedigital/pttg-maintenance:{{.VERSION}}
         resources:
-          limits:
-            cpu: 300m
-            memory: 1024Mi
-          requests:
-            cpu: 200m
-            memory: 512Mi
-        ports:
-          - name: http
-            containerPort: 8080
+         limits:
+           memory: "100Mi"
+           cpu: 100m
+         requests:
+           memory: "50Mi"
+           cpu: 100m
         imagePullPolicy: Always
         volumeMounts:
           - name: htmlstatic
